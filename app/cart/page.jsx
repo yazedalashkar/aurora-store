@@ -21,7 +21,7 @@ export default function CartPage() {
 
     const message = `مرحباً، قمت بزيارة موقعك و أريد طلب هذا الاوردر:  ${itemsList}. Total: $${total.toFixed(2)}`;
     const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/0995787620?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/963995787620?text=${encoded}`, '_blank');
 
     addToast('Opening WhatsApp...', 'success');
   };
