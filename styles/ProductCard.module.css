@@ -145,17 +145,19 @@
   overflow: hidden;
 }
 
+.prices {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
 .priceRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-}
-
-.prices {
-  display: flex;
-  align-items: baseline;
-  gap: 0.4rem;
+  flex-wrap: wrap;
 }
 
 .price {
