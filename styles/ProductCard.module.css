@@ -34,50 +34,6 @@
   transform: scale(1.08);
 }
 
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.4) 0%,
-    transparent 60%
-  );
-  opacity: 0;
-  transition: opacity var(--transition);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: 1.25rem;
-}
-
-.card:hover .overlay {
-  opacity: 1;
-}
-
-.quickAdd {
-  width: 100%;
-  padding: 0.625rem 1.25rem;
-  border-radius: var(--radius-xl);
-  background: var(--white);
-  color: var(--black);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  transition: background var(--transition), transform var(--transition);
-  transform: translateY(10px);
-  opacity: 0;
-  transition: transform 0.25s ease, opacity 0.25s ease, background 0.2s;
-}
-
-.card:hover .quickAdd {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.quickAdd:hover {
-  background: var(--pink-200);
-}
-
 .badge {
   position: absolute;
   top: 0.75rem;
@@ -155,7 +111,7 @@
 .priceRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 0.5rem;
   flex-wrap: wrap;
 }
@@ -170,25 +126,4 @@
   font-size: 0.8125rem;
   color: var(--gray-400);
   text-decoration: line-through;
-}
-
-.addBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--pink-200), var(--blue-200));
-  color: var(--black);
-  font-size: 1.25rem;
-  font-weight: 400;
-  transition: transform var(--transition), box-shadow var(--transition);
-  flex-shrink: 0;
-  line-height: 1;
-}
-
-.addBtn:hover {
-  transform: scale(1.15);
-  box-shadow: 0 4px 16px rgba(255, 143, 171, 0.4);
 }
