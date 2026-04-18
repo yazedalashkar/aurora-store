@@ -20,9 +20,12 @@ export default function ProductModal({ product, isOpen, onClose }) {
     setIsImageZoomed(!isImageZoomed);
   };
 
-  const discount = product.originalPrice
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+  const price = Number(product.price ?? 0);
+  const originalPrice = product.originalPrice != null ? Number(product.originalPrice) : null;
+  const discount = originalPrice
+    ? Math.round(((originalPrice - price) / originalPrice) * 100)
     : null;
+  const imageUrl = product.image_url || '';
 
   if (!isOpen) return null;
 
@@ -36,7 +39,7 @@ export default function ProductModal({ product, isOpen, onClose }) {
         <div className={styles.content}>
           <div className={styles.imageContainer}>
             <img
-              src={product.image}
+              src={imageUrl}
               alt={product.name}
               className={`${styles.image} ${isImageZoomed ? styles.zoomed : ''}`}
               onClick={handleImageClick}
@@ -55,9 +58,9 @@ export default function ProductModal({ product, isOpen, onClose }) {
 
             <div className={styles.priceSection}>
               <div className={styles.prices}>
-                <span className={styles.price}>${product.price.toFixed(2)}</span>
-                {product.originalPrice && (
-                  <span className={styles.originalPrice}>${product.originalPrice.toFixed(2)}</span>
+                <span className={styles.price}>${price.toFixed(2)}</span>
+                {originalPrice != null && (
+                  <span className={styles.originalPrice}>${originalPrice.toFixed(2)}</span>
                 )}
                 {discount && (
                   <span className={styles.discount}>-{discount}%</span>

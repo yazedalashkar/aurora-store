@@ -15,16 +15,19 @@ export default function ProductCard({ product }) {
     setIsModalOpen(false);
   };
 
-  const discount = product.originalPrice
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+  const price = Number(product.price ?? 0);
+  const originalPrice = product.originalPrice != null ? Number(product.originalPrice) : null;
+  const discount = originalPrice
+    ? Math.round(((originalPrice - price) / originalPrice) * 100)
     : null;
+  const imageUrl = product.image_url || '';
 
   return (
     <>
       <div className={styles.card} onClick={handleCardClick}>
         <div className={styles.imageWrap}>
           <img
-            src={product.image}
+            src={imageUrl}
             alt={product.name}
             className={styles.image}
           />
@@ -42,9 +45,9 @@ export default function ProductCard({ product }) {
 
           <div className={styles.priceRow}>
             <div className={styles.prices}>
-              <span className={styles.price}>${product.price.toFixed(2)}</span>
-              {product.originalPrice && (
-                <span className={styles.originalPrice}>${product.originalPrice.toFixed(2)}</span>
+              <span className={styles.price}>${price.toFixed(2)}</span>
+              {originalPrice != null && (
+                <span className={styles.originalPrice}>${originalPrice.toFixed(2)}</span>
               )}
               {discount && (
                 <span className={styles.discount} style={{ marginLeft: '0.4rem', color: '#e05555', fontSize: '0.8125rem', fontWeight: 600 }}>

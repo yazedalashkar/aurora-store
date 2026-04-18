@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { products } from '@/data/products';
+import { supabase } from '@/lib/supabase';
 import ProductCard from '@/components/ProductCard';
 import CategoryFilter from '@/components/CategoryFilter';
 import styles from '@/styles/Products.module.css';
@@ -12,6 +12,9 @@ export default function ProductsPage() {
   const router = useRouter();
   const pathname = usePathname();
   const [selectedCategory, setSelectedCategory] = useState('الكل');
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState(['الكل']);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const category = searchParams.get('category');
@@ -19,6 +22,38 @@ export default function ProductsPage() {
       setSelectedCategory(category);
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('id', { ascending: true });
+
+      setLoading(false);
+      if (error) {
+        setProducts([]);
+        setCategories(['الكل']);
+        return;
+      }
+
+      const loadedProducts = data || [];
+      setProducts(loadedProducts);
+      const uniqueCategories = Array.from(
+        new Set(loadedProducts.map((product) => product.category).filter(Boolean))
+      );
+      setCategories(['الكل', ...uniqueCategories]);
+    };
+
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCategory !== 'الكل' && !categories.includes(selectedCategory)) {
+      setSelectedCategory('الكل');
+    }
+  }, [categories, selectedCategory]);
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
@@ -30,7 +65,7 @@ export default function ProductsPage() {
   const filtered = useMemo(() => {
     if (selectedCategory === 'الكل') return products;
     return products.filter((p) => p.category === selectedCategory);
-  }, [selectedCategory]);
+  }, [selectedCategory, products]);
 
   return (
     <div className={styles.page}>
@@ -38,18 +73,23 @@ export default function ProductsPage() {
         <span className={styles.eyebrow}>🛍 تسوق المجموعة</span>
         <h1 className={styles.title}>جميع المنتجات</h1>
         <p className={styles.sub}>
-        تصفح منتجاتنا المميزة، لا تتردد في التواصل معنا لأي استفسار
+          تصفح منتجاتنا المميزة، لا تتردد في التواصل معنا لأي استفسار
         </p>
       </div>
 
       <div className={styles.controls}>
-        <CategoryFilter selected={selectedCategory} onChange={handleCategoryChange} />
+        <CategoryFilter selected={selectedCategory} onChange={handleCategoryChange} categories={categories} />
         <div className={styles.count}>
           {filtered.length} {filtered.length === 1 ? 'عنصر' : 'عناصر'}
         </div>
       </div>
 
-      {filtered.length > 0 ? (
+      {loading ? (
+        <div className={styles.loadingState}>
+          <div className={styles.spinner} />
+          جاري تحميل المنتجات...
+        </div>
+      ) : filtered.length > 0 ? (
         <div className={styles.grid}>
           {filtered.map((product) => (
             <ProductCard key={product.id} product={product} />

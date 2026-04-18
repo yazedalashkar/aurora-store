@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { featuredProducts } from '@/data/products';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase';
 import ProductCard from '@/components/ProductCard';
 import HeroSection from '@/components/HeroSection';
 import styles from '@/styles/Home.module.css';
@@ -13,6 +13,29 @@ export default function Home() {
     { number: '80+', label: 'قطع مباعة' },
     { number: '100%', label: 'معدل الرضا' },
   ]);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('id', { ascending: true })
+        .limit(4);
+
+      setLoading(false);
+      if (error) {
+        setFeaturedProducts([]);
+        return;
+      }
+
+      setFeaturedProducts(data || []);
+    };
+
+    fetchFeatured();
+  }, []);
 
   return (
     <>
@@ -31,20 +54,28 @@ export default function Home() {
         <div className={styles.sectionHeader}>
           <span className={styles.sectionEyebrow}>✨ مجموعة مختارة</span>
           <h2 className={styles.sectionTitle}>القطع المميزة</h2>
-          
         </div>
 
-        <div className={styles.featuredGrid}>
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {loading ? (
+          <div className={styles.loadingState}>
+            <div className={styles.spinner} />
+            جاري تحميل المنتجات...
+          </div>
+        ) : (
+          <>
+            <div className={styles.featuredGrid}>
+              {featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
 
-        <div className={styles.viewAll}>
-          <Link href="/products?category=الكل" className={styles.btnPrimary}>
-            عرض جميع المنتجات ←
-          </Link>
-        </div>
+            <div className={styles.viewAll}>
+              <Link href="/products?category=الكل" className={styles.btnPrimary}>
+                عرض جميع المنتجات ←
+              </Link>
+            </div>
+          </>
+        )}
       </section>
     </>
   );
