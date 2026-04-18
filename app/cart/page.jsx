@@ -31,10 +31,10 @@ export default function CartPage() {
       <div className={styles.page}>
         <div className={styles.empty}>
           <div className={styles.emptyIcon}>🛍</div>
-          <h2>Your cart is empty</h2>
-          <p>Explore our collection and find something you love</p>
+          <h2>السلة فارغة</h2>
+          <p>تصفح منتجاتنا واختر ما يعجبك</p>
           <Link href="/products" className={styles.btnPrimary} style={{ display: 'inline-flex' }}>
-            Continue Shopping →
+            متابعة التسوق →
           </Link>
         </div>
       </div>
@@ -43,14 +43,14 @@ export default function CartPage() {
 
   return (
     <div className={styles.page}>
-      <span className={styles.eyebrow}>🛒 Shopping Cart</span>
-      <h1 className={styles.title}>Your Items</h1>
+      <span className={styles.eyebrow}>🛒 سلة التسوق</span>
+      <h1 className={styles.title}>منتجاتي</h1>
 
       <div className={styles.layout}>
         <div className={styles.items}>
           {cartItems.map((item) => (
             <div key={item.id} className={styles.item}>
-              <img src={item.image} alt={item.name} className={styles.itemImage} />
+              <img src={item.image_url || item.image || ''} alt={item.name} className={styles.itemImage} />
 
               <div className={styles.itemInfo}>
                 <p className={styles.itemCategory}>{item.category}</p>
@@ -87,32 +87,32 @@ export default function CartPage() {
         </div>
 
         <div className={styles.summary}>
-          <h3 className={styles.summaryTitle}>Order Summary</h3>
+          <h3 className={styles.summaryTitle}>ملخص الطلب</h3>
 
           <div className={styles.summaryRow}>
-            <span>Subtotal</span>
+            <span>الإجمالي الفرعي</span>
             <span>${total.toFixed(2)}</span>
           </div>
 
           <div className={styles.summaryRow}>
-            <span>Shipping</span>
-            <span>Free</span>
+            <span>الشحن</span>
+            <span>مجاني</span>
           </div>
 
           <div className={styles.summaryDivider} />
 
           <div className={styles.totalRow}>
-            <span className={styles.totalLabel}>Total</span>
+            <span className={styles.totalLabel}>الإجمالي</span>
             <span className={styles.totalAmount}>${total.toFixed(2)}</span>
           </div>
 
           <button className={styles.whatsappBtn} onClick={handleWhatsApp}>
             <span>💬</span>
-            Send Order via WhatsApp
+            إرسال الطلب عبر واتساب
           </button>
 
           <button className={styles.clearBtn} onClick={clearCart}>
-            Clear Cart
+            تفريغ السلة
           </button>
         </div>
       </div>
